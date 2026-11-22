@@ -7,18 +7,18 @@ SCHEDULE = [
     {
         "day": "Tuesday, Nov 24",
         "items": [
-            {"time": "6:00pm", "title": "Dinner at home", "detail": "Fried clam happy hour. Eat up and keep your mouth shut about the teams — tomorrow's draft is final and nobody's trading."},
+            {"time": "6:00pm", "title": "Dinner at home", "detail": "Family confirmed a fried clam happy hour would proceed as scheduled, adding that team assignments were final and any lobbying for a trade would be, in their words, \"noted and ignored.\""},
         ],
     },
     {
         "day": "Wednesday, Nov 25",
         "items": [
-            {"time": "Morning", "title": "Happy Birthday to someone!", "detail": "We all know. We're not telling you. Figure it out."},
-            {"time": "Breakfast", "title": "Breakfast at our house", "detail": "Waffles, pancakes, yogurt bowls, granola, mixed berries. Carb up — you're about to pop balloons with your face."},
-            {"time": "10:00am – 12:00pm", "title": "THE OLYMPICS", "detail": "At Jess's house. Bring knee pads and low expectations for your dignity.", "highlight": True},
-            {"time": "12:00 / 12:30pm", "title": "Lunch", "detail": "Ice your injuries at Jess's house."},
-            {"time": "3:00pm – 5:30pm", "title": "SCAVENGER HUNT", "detail": "Downtown Boston and the North End find out what we're about.", "highlight": True},
-            {"time": "5:30pm", "title": "Closing ceremonies + dinner", "detail": "Wayne's pick, so complaints go to Wayne: Piccolo Nido, 257 North St, Boston."},
+            {"time": "Morning", "title": "Happy Birthday to someone!", "detail": "Family confirmed one member is celebrating a birthday Wednesday, declining to specify who, citing a longstanding policy of making relatives figure it out themselves."},
+            {"time": "Breakfast", "title": "Breakfast at our house", "detail": "Waffles, pancakes, yogurt bowls, granola, and mixed berries will reportedly be served to nine adults who, within hours, will be asked to pop balloons using only their faces."},
+            {"time": "10:00am – 12:00pm", "title": "THE OLYMPICS", "detail": "At Jess's house. Attendees are advised to arrive with knee pads and, per one organizer, \"zero remaining dignity to lose.\"", "highlight": True},
+            {"time": "12:00 / 12:30pm", "title": "Lunch", "detail": "A mandatory icing-of-injuries period will be observed at Jess's house."},
+            {"time": "3:00pm – 5:30pm", "title": "SCAVENGER HUNT", "detail": "Downtown Boston and the North End will reportedly be introduced to this family for the first time, with limited advance warning.", "highlight": True},
+            {"time": "5:30pm", "title": "Closing ceremonies + dinner", "detail": "Restaurant selected unilaterally by Wayne, who has asked that all complaints be directed to him in person: Piccolo Nido, 257 North St, Boston."},
         ],
     },
     {
@@ -26,8 +26,8 @@ SCHEDULE = [
         "items": [
             {"time": "All day", "title": "At Jess's house", "detail": ""},
             {"time": "Breakfast", "title": "Frittata and bagels", "detail": ""},
-            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash are frying the turkey again. Fire extinguisher's by the door, just in case."},
-            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Assuming the turkey, and the house, both survive."},
+            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash confirmed they would once again fry the turkey themselves, with a fire extinguisher reportedly staged nearby \"just as a formality.\""},
+            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Will proceed as planned, contingent on the structural integrity of both the turkey and the house."},
         ],
     },
 ]
@@ -36,7 +36,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "pop-fast",
         "name": "Pop Fast",
-        "tagline": "3 vs 3. No hands. No feet. No dignity.",
+        "tagline": "Local Family Confirms Balloon-Popping Can, In Fact, Be Done With Only Elbows",
         "rules": "3 people per team pop 20 balloons each — no hands or feet allowed. Fastest team to finish wins.",
         "team_size": "3 per team",
         "wins_by": "Fastest time",
@@ -44,7 +44,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "face-the-cookie",
         "name": "Face the Cookie",
-        "tagline": "From forehead to mouth, no hands, pure humiliation.",
+        "tagline": "Area Adult Successfully Relocates Cookie Six Inches Using Only Facial Muscles",
         "rules": "5 people per team race a cookie from forehead down to the mouth, no hands. First team to get all 5 wins.",
         "team_size": "5 per team",
         "wins_by": "First team done",
@@ -52,7 +52,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "defying-gravity",
         "name": "Defying Gravity",
-        "tagline": "Keep it up. Low expectations, high balloons.",
+        "tagline": "Nine Adults To Spend Two Full Minutes Keeping Balloons Airborne For Unclear Reasons",
         "rules": "3 people per team keep balloons in the air as long as possible. Ends when one team's balloons all hit the ground, or at 2 minutes — whoever has more balloons still airborne wins.",
         "team_size": "3 per team",
         "wins_by": "Balloons down last, or most airborne at 2:00",
@@ -60,7 +60,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "iron-man",
         "name": "Iron Man",
-        "tagline": "Chopsticks. Nuts. Your fine motor skills, exposed.",
+        "tagline": "Grown Man Reportedly Reduced To Tears By Single Cashew And One Chopstick",
         "rules": "3 people per team stack nuts using only chopsticks — no hands allowed. Fastest/most wins.",
         "team_size": "3 per team",
         "wins_by": "Fastest time",
@@ -68,7 +68,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "flip-cup-ttt",
         "name": "Flip Cup Tic-Tac-Toe",
-        "tagline": "Flip cup, but make it a bracket.",
+        "tagline": "Bracket-Style Drinking Tournament Introduced To Settle Dispute No One Can Recall Starting",
         "rules": "4 people per team. Three 1-on-1 flip cup matches; the winners of each then face off until there's one champion.",
         "team_size": "4 per team",
         "wins_by": "Bracket winner",
@@ -76,7 +76,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "puzzle-race",
         "name": "Puzzle Race",
-        "tagline": "The whole squad. One puzzle. No mercy.",
+        "tagline": "Entire Team Confirms 500-Piece Puzzle Is, In Fact, Worth Fighting Over",
         "rules": "Entire team races to finish a puzzle first.",
         "team_size": "Whole team",
         "wins_by": "First team finished",
