@@ -21,8 +21,6 @@ SCAVENGER_UNLOCK_DT = dateparser.isoparse(SCAVENGER_UNLOCK_AT)
 
 ADMIN_TOKEN = hmac.new(SESSION_SECRET.encode(), ADMIN_PASSWORD.encode(), hashlib.sha256).hexdigest()
 
-TEAM_NAMES = {"team1": "Team 1", "team2": "Team 2"}
-
 app = FastAPI()
 
 

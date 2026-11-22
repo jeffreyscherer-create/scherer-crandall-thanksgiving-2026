@@ -24,7 +24,7 @@ function pollState(onState, intervalMs) {
 }
 
 function teamLabel(team) {
-  return team === "team1" ? "Team 1" : team === "team2" ? "Team 2" : team;
+  return team === "team1" ? "The Idiots" : team === "team2" ? "The Wise" : team;
 }
 
 function teamPillHtml(team) {
