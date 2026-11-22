@@ -40,8 +40,8 @@
     <div class="card">
       <form id="bonus-form">
         <select name="team" required>
-          <option value="team1">The Idiots</option>
-          <option value="team2">The Wise</option>
+          <option value="team1">Team 1: The Idiots</option>
+          <option value="team2">Team 2: The Wise</option>
         </select>
         <input type="text" name="label" placeholder="Label (e.g. '10 min late')" required>
         <input type="text" name="points" placeholder="Points (negative for penalty)" required>
@@ -94,9 +94,9 @@ function renderOlympicsAdmin(state) {
       <div class="card">
         <h3>${ev.name}</h3>
         <form class="score-form" data-event="${ev.id}">
-          <label>The Idiots points</label>
+          <label>Team 1: The Idiots points</label>
           <input type="text" name="team1" value="${scores.team1 || 0}">
-          <label>The Wise points</label>
+          <label>Team 2: The Wise points</label>
           <input type="text" name="team2" value="${scores.team2 || 0}">
           <button type="submit" class="small">Save</button>
         </form>
@@ -110,8 +110,8 @@ function renderShowdownAdmin(state) {
     const current = state.showdown_results[sd.id];
     return `
       <p><strong>${sd.title}</strong>
-        <button class="small ${current === "team1" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team1">The Idiots win</button>
-        <button class="small ${current === "team2" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team2">The Wise win</button>
+        <button class="small ${current === "team1" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team1">Team 1: The Idiots win</button>
+        <button class="small ${current === "team2" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team2">Team 2: The Wise win</button>
       </p>
     `;
   }).join("");
