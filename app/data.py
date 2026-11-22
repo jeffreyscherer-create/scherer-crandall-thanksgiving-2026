@@ -26,7 +26,7 @@ SCHEDULE = [
         "items": [
             {"time": "All day", "title": "At Jess's house", "detail": ""},
             {"time": "Breakfast", "title": "Frittata and bagels", "detail": ""},
-            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash are frying the turkey again. The fire extinguisher is nearby, just in case."},
+            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash are frying a turkey. Please update your wills and ensure life insurance policies are intact."},
             {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Assuming the turkey, and the house, are both still intact."},
         ],
     },
