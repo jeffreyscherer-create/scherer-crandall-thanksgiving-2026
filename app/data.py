@@ -7,18 +7,18 @@ SCHEDULE = [
     {
         "day": "Tuesday, Nov 24",
         "items": [
-            {"time": "6:00pm", "title": "Dinner at home", "detail": "Fried clam happy hour. Bring your appetite and your poker face for tomorrow."},
+            {"time": "6:00pm", "title": "Dinner at home", "detail": "Fried clam happy hour. Eat up and keep your mouth shut about the teams — tomorrow's draft is final and nobody's trading."},
         ],
     },
     {
         "day": "Wednesday, Nov 25",
         "items": [
-            {"time": "Morning", "title": "Happy Birthday to someone!", "detail": "Good luck figuring out who."},
-            {"time": "Breakfast", "title": "Breakfast at our house", "detail": "Waffles, pancakes, yogurt bowls, granola, mixed berries."},
-            {"time": "10:00am – 12:00pm", "title": "THE OLYMPICS", "detail": "At Jess's house. The festivities begin.", "highlight": True},
-            {"time": "12:00 / 12:30pm", "title": "Lunch", "detail": "Break time, at Jess's house."},
-            {"time": "3:00pm – 5:30pm", "title": "SCAVENGER HUNT", "detail": "The festivities continue, downtown Boston & the North End.", "highlight": True},
-            {"time": "5:30pm", "title": "Closing ceremonies + dinner", "detail": "Wayne's pick: Piccolo Nido, 257 North St, Boston."},
+            {"time": "Morning", "title": "Happy Birthday to someone!", "detail": "We all know. We're not telling you. Figure it out."},
+            {"time": "Breakfast", "title": "Breakfast at our house", "detail": "Waffles, pancakes, yogurt bowls, granola, mixed berries. Carb up — you're about to pop balloons with your face."},
+            {"time": "10:00am – 12:00pm", "title": "THE OLYMPICS", "detail": "At Jess's house. Bring knee pads and low expectations for your dignity.", "highlight": True},
+            {"time": "12:00 / 12:30pm", "title": "Lunch", "detail": "Ice your injuries at Jess's house."},
+            {"time": "3:00pm – 5:30pm", "title": "SCAVENGER HUNT", "detail": "Downtown Boston and the North End find out what we're about.", "highlight": True},
+            {"time": "5:30pm", "title": "Closing ceremonies + dinner", "detail": "Wayne's pick, so complaints go to Wayne: Piccolo Nido, 257 North St, Boston."},
         ],
     },
     {
@@ -26,8 +26,8 @@ SCHEDULE = [
         "items": [
             {"time": "All day", "title": "At Jess's house", "detail": ""},
             {"time": "Breakfast", "title": "Frittata and bagels", "detail": ""},
-            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "50% chance Wayne and Dash burn down the house frying the turkey."},
-            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": ""},
+            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash are frying the turkey again. Fire extinguisher's by the door, just in case."},
+            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Assuming the turkey, and the house, both survive."},
         ],
     },
 ]
@@ -52,7 +52,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "defying-gravity",
         "name": "Defying Gravity",
-        "tagline": "Keep it up. We believe in you.",
+        "tagline": "Keep it up. Low expectations, high balloons.",
         "rules": "3 people per team keep balloons in the air as long as possible. Ends when one team's balloons all hit the ground, or at 2 minutes — whoever has more balloons still airborne wins.",
         "team_size": "3 per team",
         "wins_by": "Balloons down last, or most airborne at 2:00",
