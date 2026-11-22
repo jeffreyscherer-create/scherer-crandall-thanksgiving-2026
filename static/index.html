@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Scherer/Crandall Thanksgiving 2026</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>&#127485; Scherer/Crandall Thanksgiving 2026</h1>
+  <div class="subtitle">Two teams. One turkey. Zero chill.</div>
+</header>
+<nav class="tabs">
+  <a href="index.html" class="active">Home</a>
+  <a href="schedule.html">Schedule</a>
+  <a href="teams.html">Teams</a>
+  <a href="olympics.html">Olympics</a>
+  <a href="scavenger.html">Hunt</a>
+  <a href="admin.html">Judge</a>
+</nav>
+<main class="wrap">
+
+  <h2 class="section-title">Live Scoreboard</h2>
+  <div class="scoreboard" id="scoreboard">
+    <div class="score-box"><div class="team-label">Team 1</div><div class="score-num" id="score-team1">0</div></div>
+    <div class="score-box"><div class="team-label">Team 2</div><div class="score-num" id="score-team2">0</div></div>
+  </div>
+  <p class="locked-note" id="scoreboard-note"></p>
+
+  <h2 class="section-title">What's Coming</h2>
+  <div class="card" id="teaser-card">
+    <p>Loading the chaos...</p>
+  </div>
+
+  <h2 class="section-title">The Short Version</h2>
+  <div class="card">
+    <p>Wednesday morning: a backyard Olympics designed to humiliate at least one in-law. Wednesday afternoon: a Boston scavenger hunt that will end with someone chugging a Guinness in the North End on camera. Two teams. One scoreboard. May the better family branch win.</p>
+    <p>Check the <a href="schedule.html">Schedule</a> for the whole week and <a href="teams.html">Teams</a> to see who you're stuck with.</p>
+  </div>
+
+</main>
+<footer class="legal">Built with love, spite, and mild sleep deprivation for Thanksgiving 2026.</footer>
+<script src="js/app.js"></script>
+<script>
+function teaserHtml(state) {
+  const parts = [];
+  if (!state.olympics_unlocked) {
+    parts.push(`<p><strong>The Olympics</strong> are still under wraps. Stretch. You'll need it.</p>`);
+  } else {
+    parts.push(`<p><strong>The Olympics</strong> are LIVE &mdash; <a href="olympics.html">go look</a>.</p>`);
+  }
+  if (!state.scavenger_unlocked) {
+    parts.push(`<p><strong>The Scavenger Hunt</strong> is locked until Wednesday afternoon. Somewhere in Boston, a bartender has no idea what's coming.</p>`);
+  } else {
+    parts.push(`<p><strong>The Scavenger Hunt</strong> is LIVE &mdash; <a href="scavenger.html">go look</a>.</p>`);
+  }
+  return parts.join("");
+}
+
+pollState((state) => {
+  document.getElementById("score-team1").textContent = state.combined_total.team1;
+  document.getElementById("score-team2").textContent = state.combined_total.team2;
+  document.getElementById("teaser-card").innerHTML = teaserHtml(state);
+  document.getElementById("scoreboard-note").textContent = "Olympics + Scavenger Hunt combined, updated live.";
+});
+</script>
+</body>
+</html>

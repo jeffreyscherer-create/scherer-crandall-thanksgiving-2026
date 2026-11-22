@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Olympics &mdash; Thanksgiving 2026</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>&#127942; The Olympics</h1>
+  <div class="subtitle">Wednesday, 10am&ndash;12pm, Jess's house</div>
+</header>
+<nav class="tabs">
+  <a href="index.html">Home</a>
+  <a href="schedule.html">Schedule</a>
+  <a href="teams.html">Teams</a>
+  <a href="olympics.html" class="active">Olympics</a>
+  <a href="scavenger.html">Hunt</a>
+  <a href="admin.html">Judge</a>
+</nav>
+<main class="wrap">
+
+  <div id="locked-view" class="hidden">
+    <div class="countdown-wrap">
+      <p class="teaser">Somewhere, a balloon is being inflated for reasons it will come to regret.</p>
+      <div class="countdown" id="countdown"></div>
+      <p class="locked-note">The events unlock automatically. No, refreshing harder won't help.</p>
+    </div>
+  </div>
+
+  <div id="unlocked-view" class="hidden">
+    <div class="scoreboard" id="scoreboard">
+      <div class="score-box"><div class="team-label">Team 1</div><div class="score-num" id="score-team1">0</div></div>
+      <div class="score-box"><div class="team-label">Team 2</div><div class="score-num" id="score-team2">0</div></div>
+    </div>
+    <h2 class="section-title">Events</h2>
+    <div id="events-root"></div>
+  </div>
+
+</main>
+<footer class="legal">Injuries are a skill issue.</footer>
+<script src="js/app.js"></script>
+<script>
+let countdownStop = null;
+
+function renderEvents(state) {
+  return state.olympic_events.map((ev) => {
+    const scores = state.olympic_scores[ev.id] || {};
+    const t1 = scores.team1 || 0;
+    const t2 = scores.team2 || 0;
+    return `
+      <div class="card">
+        <h3>${ev.name}</h3>
+        <p><em>${ev.tagline}</em></p>
+        <p>${ev.rules}</p>
+        <p><span class="pill ghost">${ev.team_size}</span> &middot; Wins by: ${ev.wins_by}</p>
+        <div class="scoreboard">
+          <div class="score-box"><div class="team-label">Team 1</div><div class="score-num">${t1}</div></div>
+          <div class="score-box"><div class="team-label">Team 2</div><div class="score-num">${t2}</div></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+pollState((state) => {
+  const locked = document.getElementById("locked-view");
+  const unlocked = document.getElementById("unlocked-view");
+  if (!state.olympics_unlocked) {
+    locked.classList.remove("hidden");
+    unlocked.classList.add("hidden");
+    if (!countdownStop) {
+      countdownStop = startCountdown(state.olympics_unlock_at, document.getElementById("countdown"));
+    }
+  } else {
+    if (countdownStop) { countdownStop(); countdownStop = null; }
+    locked.classList.add("hidden");
+    unlocked.classList.remove("hidden");
+    document.getElementById("score-team1").textContent = state.olympics_total.team1 || 0;
+    document.getElementById("score-team2").textContent = state.olympics_total.team2 || 0;
+    document.getElementById("events-root").innerHTML = renderEvents(state);
+  }
+}, 8000);
+</script>
+</body>
+</html>

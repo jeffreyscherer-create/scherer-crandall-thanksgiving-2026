@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Scavenger Hunt &mdash; Thanksgiving 2026</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>&#128269; The Scavenger Hunt</h1>
+  <div class="subtitle">Wednesday, 3&ndash;5:30pm, downtown Boston &amp; the North End</div>
+</header>
+<nav class="tabs">
+  <a href="index.html">Home</a>
+  <a href="schedule.html">Schedule</a>
+  <a href="teams.html">Teams</a>
+  <a href="olympics.html">Olympics</a>
+  <a href="scavenger.html" class="active">Hunt</a>
+  <a href="admin.html">Judge</a>
+</nav>
+<main class="wrap">
+
+  <div id="locked-view" class="hidden">
+    <div class="countdown-wrap">
+      <p class="teaser">A bartender in the North End is about to meet two teenagers ordering espresso "entirely in Italian." God help them.</p>
+      <div class="countdown" id="countdown"></div>
+      <p class="locked-note">The routes, tasks, and rules unlock automatically at 3pm.</p>
+    </div>
+  </div>
+
+  <div id="unlocked-view" class="hidden">
+    <div class="scoreboard">
+      <div class="score-box"><div class="team-label">Team 1</div><div class="score-num" id="score-team1">0</div></div>
+      <div class="score-box"><div class="team-label">Team 2</div><div class="score-num" id="score-team2">0</div></div>
+    </div>
+
+    <div class="team-switch">
+      <button data-team="team1" class="team1">View as Team 1</button>
+      <button data-team="team2" class="team2">View as Team 2</button>
+    </div>
+
+    <h2 class="section-title">House Rules</h2>
+    <div class="card"><ul class="rules-list" id="rules-root"></ul></div>
+
+    <h2 class="section-title" id="route-heading">Your Route</h2>
+    <div id="route-root"></div>
+
+    <h2 class="section-title">Wildcards <span class="pill ghost">anywhere, anytime</span></h2>
+    <div id="wildcards-root"></div>
+
+    <h2 class="section-title">Showdowns</h2>
+    <div class="card" id="showdowns-root"></div>
+  </div>
+
+</main>
+<footer class="legal">No refunds for emotional damage sustained ordering pastries in Italian.</footer>
+<script src="js/app.js"></script>
+<script>
+let countdownStop = null;
+let currentTeam = localStorage.getItem("scav_team") || "team1";
+let latestState = null;
+let lastRenderedKey = null;
+
+function taskCardHtml(task, team, state) {
+  const done = (state.completed_task_ids[team] || []).includes(task.id);
+  const isFind = task.type === "find";
+  const proofAccept = task.type === "video" ? "video/*" : "image/*";
+  return `
+    <div class="card task-card ${done ? "done" : ""}">
+      <h3>${task.title} ${done ? '<span class="done-badge">&#10003; DONE</span>' : ""}</h3>
+      <p>${flagPillHtml(task.flag)} <span class="pill ghost">${task.points} pts</span> <span class="pill ghost">${task.type === "find" ? "find it" : task.type}</span></p>
+      <p>${task.description}</p>
+      ${done ? "" : `
+      <form class="submit-form" data-task="${task.id}">
+        ${isFind ? `<input type="text" name="text_answer" placeholder="Your answer" required>` : ""}
+        <input type="file" name="proof" accept="${proofAccept}" ${isFind ? "" : "required"}>
+        <button type="submit" class="small">Mark complete for ${teamLabel(team)}</button>
+      </form>
+      `}
+    </div>
+  `;
+}
+
+function renderRoute(state, team) {
+  const route = state.team_routes[team];
+  const battleCry = taskCardHtml(state.battle_cry_task, team, state);
+  const stopsHtml = route.stops.map((stopId, idx) => {
+    const stop = state.stops[stopId];
+    const tasksHtml = stop.tasks.map((t) => taskCardHtml(t, team, state)).join("");
+    const hint = route.hints[idx];
+    return `
+      <h3>${idx + 1}. ${stop.name}</h3>
+      <p class="locked-note">${stop.location}</p>
+      ${idx === 0 ? battleCry : ""}
+      ${tasksHtml}
+      <p class="stop-hint">Next: ${hint} &rarr;</p>
+    `;
+  }).join("");
+  return `<p class="locked-note">Start: ${route.start}</p>${stopsHtml}`;
+}
+
+function renderWildcards(state, team) {
+  return state.wildcards.map((t) => taskCardHtml(t, team, state)).join("");
+}
+
+function renderShowdowns(state) {
+  return state.showdowns.map((sd) => {
+    const winner = state.showdown_results[sd.id];
+    return `<p><strong>${sd.title}</strong> &mdash; ${winner ? `winner: ${teamPillHtml(winner)}` : '<span class="locked-note">undecided, judged at dinner</span>'}</p>`;
+  }).join("");
+}
+
+function renderAll(state, force) {
+  const key = currentTeam + "|" + JSON.stringify(state.completed_task_ids[currentTeam] || []);
+  if (!force && key === lastRenderedKey) {
+    document.querySelectorAll(".team-switch button").forEach((b) => {
+      b.classList.toggle("active", b.dataset.team === currentTeam);
+    });
+    return;
+  }
+  lastRenderedKey = key;
+  document.getElementById("route-heading").textContent = `${teamLabel(currentTeam)}'s Route`;
+  document.getElementById("route-root").innerHTML = renderRoute(state, currentTeam);
+  document.getElementById("wildcards-root").innerHTML = renderWildcards(state, currentTeam);
+  document.querySelectorAll(".team-switch button").forEach((b) => {
+    b.classList.toggle("active", b.dataset.team === currentTeam);
+  });
+  document.querySelectorAll(".submit-form").forEach((form) => {
+    form.addEventListener("submit", onSubmitTask);
+  });
+}
+
+async function onSubmitTask(e) {
+  e.preventDefault();
+  const form = e.target;
+  const taskId = form.dataset.task;
+  const fd = new FormData(form);
+  fd.append("task_id", taskId);
+  fd.append("team", currentTeam);
+  const btn = form.querySelector("button");
+  btn.disabled = true;
+  btn.textContent = "Submitting...";
+  try {
+    const res = await fetch("/api/scavenger/submit", { method: "POST", body: fd, credentials: "same-origin" });
+    if (!res.ok) throw new Error("submit failed");
+    const state = await getState();
+    latestState = state;
+    renderAll(state);
+    refreshScores(state);
+  } catch (err) {
+    alert("Couldn't submit that one. Try again.");
+    btn.disabled = false;
+    btn.textContent = "Mark complete";
+  }
+}
+
+function refreshScores(state) {
+  document.getElementById("score-team1").textContent = state.scavenger_points.team1 || 0;
+  document.getElementById("score-team2").textContent = state.scavenger_points.team2 || 0;
+  document.getElementById("rules-root").innerHTML = state.rules.map((r) => `<li>${r}</li>`).join("");
+  document.getElementById("showdowns-root").innerHTML = renderShowdowns(state);
+}
+
+document.querySelectorAll(".team-switch button").forEach((b) => {
+  b.addEventListener("click", () => {
+    currentTeam = b.dataset.team;
+    localStorage.setItem("scav_team", currentTeam);
+    if (latestState) renderAll(latestState, true);
+  });
+});
+
+pollState((state) => {
+  latestState = state;
+  const locked = document.getElementById("locked-view");
+  const unlocked = document.getElementById("unlocked-view");
+  if (!state.scavenger_unlocked) {
+    locked.classList.remove("hidden");
+    unlocked.classList.add("hidden");
+    if (!countdownStop) {
+      countdownStop = startCountdown(state.scavenger_unlock_at, document.getElementById("countdown"));
+    }
+  } else {
+    if (countdownStop) { countdownStop(); countdownStop = null; }
+    locked.classList.add("hidden");
+    unlocked.classList.remove("hidden");
+    refreshScores(state);
+    renderAll(state);
+  }
+}, 8000);
+</script>
+</body>
+</html>

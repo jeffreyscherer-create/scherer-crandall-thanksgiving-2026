@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Teams &mdash; Thanksgiving 2026</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>&#129365; The Teams</h1>
+  <div class="subtitle">Blood is thicker than water. Scoreboards don't care.</div>
+</header>
+<nav class="tabs">
+  <a href="index.html">Home</a>
+  <a href="schedule.html">Schedule</a>
+  <a href="teams.html" class="active">Teams</a>
+  <a href="olympics.html">Olympics</a>
+  <a href="scavenger.html">Hunt</a>
+  <a href="admin.html">Judge</a>
+</nav>
+<main class="wrap">
+  <div class="card">
+    <p>Everyone plays at least one Olympic event and every team member's name goes somewhere on the scavenger hunt roster. No exceptions, no "I'm just here for the wine."</p>
+  </div>
+  <div class="teams-grid" id="teams-root">
+    <p class="locked-note">Loading rosters...</p>
+  </div>
+</main>
+<footer class="legal">Trades will not be accepted, negotiated, or honored.</footer>
+<script src="js/app.js"></script>
+<script>
+getState().then((state) => {
+  const t1 = state.teams.team1.map((n) => `<li>${n}</li>`).join("");
+  const t2 = state.teams.team2.map((n) => `<li>${n}</li>`).join("");
+  document.getElementById("teams-root").innerHTML = `
+    <div class="team-col">
+      <h3>${teamPillHtml("team1")}</h3>
+      <ul>${t1}</ul>
+    </div>
+    <div class="team-col">
+      <h3>${teamPillHtml("team2")}</h3>
+      <ul>${t2}</ul>
+    </div>
+  `;
+}).catch(() => {
+  document.getElementById("teams-root").innerHTML = "<p>Couldn't load teams. Try reloading.</p>";
+});
+</script>
+</body>
+</html>

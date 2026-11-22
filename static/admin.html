@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Judge &mdash; Thanksgiving 2026</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>&#9878;&#65039; Judge's Chambers</h1>
+  <div class="subtitle">Absolute power, mild accountability</div>
+</header>
+<nav class="tabs">
+  <a href="index.html">Home</a>
+  <a href="schedule.html">Schedule</a>
+  <a href="teams.html">Teams</a>
+  <a href="olympics.html">Olympics</a>
+  <a href="scavenger.html">Hunt</a>
+  <a href="admin.html" class="active">Judge</a>
+</nav>
+<main class="wrap">
+
+  <div id="login-view" class="hidden">
+    <div class="card">
+      <p>Judges only. Everyone else, nice try.</p>
+      <input type="password" id="password-input" placeholder="Password">
+      <button id="login-btn">Enter</button>
+      <p class="locked-note" id="login-error"></p>
+    </div>
+  </div>
+
+  <div id="admin-view" class="hidden">
+    <button class="secondary small" id="logout-btn">Log out</button>
+
+    <h2 class="section-title">Olympics Scores</h2>
+    <div id="olympics-admin-root"></div>
+
+    <h2 class="section-title">Scavenger Bonuses &amp; Penalties</h2>
+    <div class="card">
+      <form id="bonus-form">
+        <select name="team" required>
+          <option value="team1">Team 1</option>
+          <option value="team2">Team 2</option>
+        </select>
+        <input type="text" name="label" placeholder="Label (e.g. '10 min late')" required>
+        <input type="text" name="points" placeholder="Points (negative for penalty)" required>
+        <button type="submit">Add</button>
+      </form>
+      <div id="bonus-list"></div>
+    </div>
+
+    <h2 class="section-title">Showdown Winners</h2>
+    <div class="card" id="showdown-admin-root"></div>
+
+    <h2 class="section-title">Scavenger Submissions</h2>
+    <div id="submissions-root"></div>
+
+    <h2 class="section-title">Answer Key (shh)</h2>
+    <div class="card" id="answer-key-root"></div>
+  </div>
+
+</main>
+<footer class="legal">With great power comes the ability to ruin Thanksgiving.</footer>
+<script src="js/app.js"></script>
+<script>
+let latestState = null;
+
+function showLoggedIn(loggedIn) {
+  document.getElementById("login-view").classList.toggle("hidden", loggedIn);
+  document.getElementById("admin-view").classList.toggle("hidden", !loggedIn);
+}
+
+document.getElementById("login-btn").addEventListener("click", async () => {
+  const pw = document.getElementById("password-input").value;
+  const ok = await adminLogin(pw);
+  if (ok) {
+    showLoggedIn(true);
+    loadAdmin();
+  } else {
+    document.getElementById("login-error").textContent = "Nope. Try again.";
+  }
+});
+
+document.getElementById("logout-btn").addEventListener("click", async () => {
+  await adminLogout();
+  showLoggedIn(false);
+});
+
+function renderOlympicsAdmin(state) {
+  return state.olympic_events.map((ev) => {
+    const scores = state.olympic_scores[ev.id] || {};
+    return `
+      <div class="card">
+        <h3>${ev.name}</h3>
+        <form class="score-form" data-event="${ev.id}">
+          <label>Team 1 points</label>
+          <input type="text" name="team1" value="${scores.team1 || 0}">
+          <label>Team 2 points</label>
+          <input type="text" name="team2" value="${scores.team2 || 0}">
+          <button type="submit" class="small">Save</button>
+        </form>
+      </div>
+    `;
+  }).join("");
+}
+
+function renderShowdownAdmin(state) {
+  return state.showdowns.map((sd) => {
+    const current = state.showdown_results[sd.id];
+    return `
+      <p><strong>${sd.title}</strong>
+        <button class="small ${current === "team1" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team1">Team 1 wins</button>
+        <button class="small ${current === "team2" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team2">Team 2 wins</button>
+      </p>
+    `;
+  }).join("");
+}
+
+function renderBonusList(state) {
+  if (!state.scavenger_bonuses.length) return "<p class=\"locked-note\">None yet.</p>";
+  return state.scavenger_bonuses.map((b) => `<p>${teamPillHtml(b.team)} ${b.label}: ${b.points > 0 ? "+" : ""}${b.points}</p>`).join("");
+}
+
+function renderSubmissions(state) {
+  if (!state.scavenger_submissions.length) return "<p class=\"locked-note\">Nothing submitted yet.</p>";
+  return state.scavenger_submissions.slice().reverse().map((s) => {
+    const isVideo = s.proof_path && /\.(mp4|mov|webm)$/i.test(s.proof_path);
+    const proof = s.proof_path
+      ? (isVideo
+          ? `<video class="proof-thumb" src="${s.proof_path}" controls></video>`
+          : `<img class="proof-thumb" src="${s.proof_path}">`)
+      : "";
+    return `
+      <div class="card">
+        <p>${teamPillHtml(s.team)} <strong>${s.task_id}</strong> (+${s.points})</p>
+        ${s.text_answer ? `<p>Answer: ${s.text_answer}</p>` : ""}
+        ${proof}
+        <button class="small secondary" data-void="${s.id}">Void this submission</button>
+      </div>
+    `;
+  }).join("");
+}
+
+async function loadAdmin() {
+  latestState = await getState();
+  document.getElementById("olympics-admin-root").innerHTML = renderOlympicsAdmin(latestState);
+  document.getElementById("showdown-admin-root").innerHTML = renderShowdownAdmin(latestState);
+  document.getElementById("bonus-list").innerHTML = renderBonusList(latestState);
+  document.getElementById("submissions-root").innerHTML = renderSubmissions(latestState);
+
+  const akRes = await fetch("/api/admin/answer-key", { credentials: "same-origin" });
+  if (akRes.ok) {
+    const ak = await akRes.json();
+    document.getElementById("answer-key-root").innerHTML = Object.entries(ak)
+      .map(([k, v]) => `<p><strong>${k}</strong>: ${v}</p>`).join("");
+  }
+
+  document.querySelectorAll(".score-form").forEach((form) => {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const eventId = form.dataset.event;
+      const fd = new FormData(form);
+      await postForm("/api/admin/olympics-score", { event_id: eventId, team: "team1", points: fd.get("team1") });
+      await postForm("/api/admin/olympics-score", { event_id: eventId, team: "team2", points: fd.get("team2") });
+      loadAdmin();
+    });
+  });
+
+  document.querySelectorAll("[data-showdown]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await postForm("/api/admin/showdown", { showdown_id: btn.dataset.showdown, winner_team: btn.dataset.winner });
+      loadAdmin();
+    });
+  });
+
+  document.querySelectorAll("[data-void]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await postForm("/api/admin/scavenger/void", { submission_id: btn.dataset.void });
+      loadAdmin();
+    });
+  });
+
+  document.getElementById("bonus-form").onsubmit = async (e) => {
+    e.preventDefault();
+    const fd = new FormData(e.target);
+    await postForm("/api/admin/scavenger/bonus", {
+      team: fd.get("team"),
+      label: fd.get("label"),
+      points: fd.get("points"),
+    });
+    e.target.reset();
+    loadAdmin();
+  };
+}
+
+(async () => {
+  const loggedIn = await adminCheck();
+  showLoggedIn(loggedIn);
+  if (loggedIn) loadAdmin();
+})();
+</script>
+</body>
+</html>
