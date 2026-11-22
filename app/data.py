@@ -7,18 +7,18 @@ SCHEDULE = [
     {
         "day": "Tuesday, Nov 24",
         "items": [
-            {"time": "6:00pm", "title": "Dinner at home", "detail": "Family confirmed a fried clam happy hour would proceed as scheduled, adding that team assignments were final and any lobbying for a trade would be, in their words, \"noted and ignored.\""},
+            {"time": "6:00pm", "title": "Dinner at home", "detail": "Fried clam happy hour and a great meal. Rick will select the wine and Wayne the tequila."},
         ],
     },
     {
         "day": "Wednesday, Nov 25",
         "items": [
-            {"time": "Morning", "title": "Happy Birthday to someone!", "detail": "Family confirmed one member is celebrating a birthday Wednesday, declining to specify who, citing a longstanding policy of making relatives figure it out themselves."},
-            {"time": "Breakfast", "title": "Breakfast at our house", "detail": "Waffles, pancakes, yogurt bowls, granola, and mixed berries will reportedly be served to nine adults who, within hours, will be asked to pop balloons using only their faces."},
-            {"time": "10:00am – 12:00pm", "title": "THE OLYMPICS", "detail": "At Jess's house. Attendees are advised to arrive with knee pads and, per one organizer, \"zero remaining dignity to lose.\"", "highlight": True},
-            {"time": "12:00 / 12:30pm", "title": "Lunch", "detail": "A mandatory icing-of-injuries period will be observed at Jess's house."},
-            {"time": "3:00pm – 5:30pm", "title": "SCAVENGER HUNT", "detail": "Downtown Boston and the North End will reportedly be introduced to this family for the first time, with limited advance warning.", "highlight": True},
-            {"time": "5:30pm", "title": "Closing ceremonies + dinner", "detail": "Restaurant selected unilaterally by Wayne, who has asked that all complaints be directed to him in person: Piccolo Nido, 257 North St, Boston."},
+            {"time": "Morning", "title": "Happy Birthday to someone!", "detail": "One member is celebrating a birthday Wednesday. Good luck figuring it out."},
+            {"time": "Breakfast", "title": "Breakfast at our house", "detail": "Waffles, pancakes, yogurt bowls, granola, and mixed berries. Eat up — the balloons won't wait."},
+            {"time": "10:00am – 12:00pm", "title": "THE OLYMPICS", "detail": "At Jess's house. Bring knee pads and leave your dignity at home.", "highlight": True},
+            {"time": "12:00 / 12:30pm", "title": "Lunch", "detail": "Lunch and ice packs at Jess's house."},
+            {"time": "3:00pm – 5:30pm", "title": "SCAVENGER HUNT", "detail": "Downtown Boston and the North End, whether they're ready for us or not.", "highlight": True},
+            {"time": "5:30pm", "title": "Closing ceremonies + dinner", "detail": "Wayne picked the restaurant, so complaints go to him: Piccolo Nido, 257 North St, Boston."},
         ],
     },
     {
@@ -26,8 +26,8 @@ SCHEDULE = [
         "items": [
             {"time": "All day", "title": "At Jess's house", "detail": ""},
             {"time": "Breakfast", "title": "Frittata and bagels", "detail": ""},
-            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash confirmed they would once again fry the turkey themselves, with a fire extinguisher reportedly staged nearby \"just as a formality.\""},
-            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Will proceed as planned, contingent on the structural integrity of both the turkey and the house."},
+            {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash are frying the turkey again. The fire extinguisher is nearby, just in case."},
+            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Assuming the turkey, and the house, are both still intact."},
         ],
     },
 ]
