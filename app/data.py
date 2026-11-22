@@ -27,7 +27,7 @@ SCHEDULE = [
             {"time": "All day", "title": "At Jess's house", "detail": ""},
             {"time": "Breakfast", "title": "Frittata and bagels", "detail": ""},
             {"time": "Daytime", "title": "Cooking together, white elephant gift exchange, football & family games", "detail": "Wayne and Dash are frying a turkey. Please update your wills and ensure life insurance policies are intact."},
-            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Assuming the turkey, and the house, are both still intact."},
+            {"time": "4:00pm", "title": "Thanksgiving dinner", "detail": "Assuming the turkey, and the house, are both still intact. Howard wants lobster. Rick is attempting to fly in with an electric carving knife in his carry-on and plans to carve the turkey like a master surgeon."},
         ],
     },
 ]
