@@ -1,7 +1,7 @@
 """Static event content: schedule, teams, Olympic events, scavenger hunt stops."""
 
 TEAM_1 = ["Jess", "Sky", "Dash", "Kevin", "Lucy", "Sam", "Wayne", "Howard", "Carol"]
-TEAM_2 = ["Bob", "Jeff", "Ellie", "Cassie", "Maisie", "Mona", "Rick", "Max", "Chayenne"]
+TEAM_2 = ["Bop", "Jeff", "Ellie", "Cassie", "Maisie", "Mona", "Rick", "Max", "Chayenne"]
 
 SCHEDULE = [
     {
