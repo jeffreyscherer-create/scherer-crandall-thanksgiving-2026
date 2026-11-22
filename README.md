@@ -2,6 +2,8 @@
 
 Mobile-first event app for the 2026 Thanksgiving Olympics + Scavenger Hunt.
 
+Deploys automatically to Railway on every push to `main`.
+
 ## Run locally
 
 ```bash
