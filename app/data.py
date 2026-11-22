@@ -60,7 +60,7 @@ OLYMPIC_EVENTS = [
     {
         "id": "iron-man",
         "name": "Iron Man",
-        "tagline": "Grown Man Reportedly Reduced To Tears By Single Cashew And One Chopstick",
+        "tagline": "Grown Man Reportedly Reduced To Tears By Single Nut And One Chopstick",
         "rules": "3 people per team stack nuts using only chopsticks — no hands allowed. Fastest/most wins.",
         "team_size": "3 per team",
         "wins_by": "Fastest time",
