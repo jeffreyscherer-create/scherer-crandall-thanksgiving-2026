@@ -133,10 +133,11 @@ function renderSubmissions(state) {
       : "";
     return `
       <div class="card">
-        <p>${teamPillHtml(s.team)} <strong>${s.task_id}</strong> (+${s.points})</p>
+        <p>${teamPillHtml(s.team)} <strong>${s.task_id}</strong> (+${s.points}) ${s.approved ? '<span class="pill ghost">APPROVED</span>' : '<span class="pill ghost">PENDING</span>'}</p>
         ${s.text_answer ? `<p>Answer: ${s.text_answer}</p>` : ""}
         ${proof}
-        <button class="small secondary" data-void="${s.id}">Void this submission</button>
+        ${s.approved ? "" : `<button class="small" data-approve="${s.id}">Approve</button>`}
+        <button class="small secondary" data-void="${s.id}">${s.approved ? "Void this submission" : "Reject"}</button>
       </div>
     `;
   }).join("");
@@ -177,6 +178,13 @@ async function loadAdmin() {
   document.querySelectorAll("[data-void]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       await postForm("/api/admin/scavenger/void", { submission_id: btn.dataset.void });
+      loadAdmin();
+    });
+  });
+
+  document.querySelectorAll("[data-approve]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await postForm("/api/admin/scavenger/approve", { submission_id: btn.dataset.approve });
       loadAdmin();
     });
   });

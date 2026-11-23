@@ -64,14 +64,18 @@ let lastRenderedKey = null;
 
 function taskCardHtml(task, team, state) {
   const done = (state.completed_task_ids[team] || []).includes(task.id);
+  const pending = (state.pending_task_ids[team] || []).includes(task.id);
   const isFind = task.type === "find";
   const proofAccept = task.type === "video" ? "video/*" : "image/*";
+  let statusBadge = "";
+  if (done) statusBadge = '<span class="done-badge">&#10003; DONE</span>';
+  else if (pending) statusBadge = '<span class="pill ghost">PENDING JUDGE REVIEW</span>';
   return `
     <div class="card task-card ${done ? "done" : ""}">
-      <h3>${task.title} ${done ? '<span class="done-badge">&#10003; DONE</span>' : ""}</h3>
+      <h3>${task.title} ${statusBadge}</h3>
       <p>${flagPillHtml(task.flag)} <span class="pill ghost">${task.points} pts</span> <span class="pill ghost">${task.type === "find" ? "find it" : task.type}</span></p>
       <p>${task.description}</p>
-      ${done ? "" : `
+      ${done || pending ? "" : `
       <form class="submit-form" data-task="${task.id}">
         ${isFind ? `<input type="text" name="text_answer" placeholder="Your answer" required>` : ""}
         <input type="file" name="proof" accept="${proofAccept}" ${isFind ? "" : "required"}>
@@ -112,7 +116,7 @@ function renderShowdowns(state) {
 }
 
 function renderAll(state, force) {
-  const key = currentTeam + "|" + JSON.stringify(state.completed_task_ids[currentTeam] || []);
+  const key = currentTeam + "|" + JSON.stringify(state.completed_task_ids[currentTeam] || []) + "|" + JSON.stringify(state.pending_task_ids[currentTeam] || []);
   if (!force && key === lastRenderedKey) {
     document.querySelectorAll(".team-switch button").forEach((b) => {
       b.classList.toggle("active", b.dataset.team === currentTeam);

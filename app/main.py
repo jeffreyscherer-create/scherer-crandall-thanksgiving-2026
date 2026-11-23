@@ -75,6 +75,7 @@ def get_state(request: Request):
 
     submissions = []
     completed_by_team = {"team1": set(), "team2": set()}
+    pending_by_team = {"team1": set(), "team2": set()}
     scavenger_points = {"team1": 0, "team2": 0}
     for row in sub_rows:
         submissions.append(
@@ -86,10 +87,14 @@ def get_state(request: Request):
                 "text_answer": row["text_answer"],
                 "proof_path": row["proof_path"],
                 "created_at": row["created_at"],
+                "approved": bool(row["approved"]),
             }
         )
-        completed_by_team.setdefault(row["team"], set()).add(row["task_id"])
-        scavenger_points[row["team"]] = scavenger_points.get(row["team"], 0) + row["points"]
+        if row["approved"]:
+            completed_by_team.setdefault(row["team"], set()).add(row["task_id"])
+            scavenger_points[row["team"]] = scavenger_points.get(row["team"], 0) + row["points"]
+        else:
+            pending_by_team.setdefault(row["team"], set()).add(row["task_id"])
 
     bonuses = []
     for row in bonus_rows:
@@ -125,6 +130,7 @@ def get_state(request: Request):
         "olympics_total": olympics_total,
         "scavenger_submissions": submissions,
         "completed_task_ids": {k: sorted(v) for k, v in completed_by_team.items()},
+        "pending_task_ids": {k: sorted(v) for k, v in pending_by_team.items()},
         "scavenger_bonuses": bonuses,
         "scavenger_points": scavenger_points,
         "showdowns": data.SHOWDOWNS,
@@ -198,6 +204,15 @@ def void_submission(request: Request, submission_id: int = Form(...)):
     require_admin(request)
     with db.get_conn() as conn:
         conn.execute("UPDATE scavenger_submissions SET voided = 1 WHERE id = ?", (submission_id,))
+        conn.commit()
+    return {"ok": True}
+
+
+@app.post("/api/admin/scavenger/approve")
+def approve_submission(request: Request, submission_id: int = Form(...)):
+    require_admin(request)
+    with db.get_conn() as conn:
+        conn.execute("UPDATE scavenger_submissions SET approved = 1 WHERE id = ?", (submission_id,))
         conn.commit()
     return {"ok": True}
 

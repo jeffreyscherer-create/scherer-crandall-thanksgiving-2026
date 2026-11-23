@@ -29,6 +29,7 @@ def init():
                 text_answer TEXT,
                 proof_path TEXT,
                 voided INTEGER NOT NULL DEFAULT 0,
+                approved INTEGER NOT NULL DEFAULT 0,
                 created_at TEXT NOT NULL DEFAULT (datetime('now'))
             );
 
@@ -46,6 +47,10 @@ def init():
             );
             """
         )
+        try:
+            conn.execute("ALTER TABLE scavenger_submissions ADD COLUMN approved INTEGER NOT NULL DEFAULT 0")
+        except sqlite3.OperationalError:
+            pass  # column already exists
         conn.commit()
 
 
