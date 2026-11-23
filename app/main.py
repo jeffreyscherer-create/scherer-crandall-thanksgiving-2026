@@ -49,11 +49,17 @@ def all_task_lookup():
 TASK_LOOKUP = all_task_lookup()
 
 
+def is_admin(request: Request):
+    token = request.cookies.get("admin_token")
+    return bool(token and hmac.compare_digest(token, ADMIN_TOKEN))
+
+
 @app.get("/api/state")
-def get_state():
+def get_state(request: Request):
     now = datetime.now(timezone.utc)
-    olympics_unlocked = now >= OLYMPICS_UNLOCK_DT
-    scavenger_unlocked = now >= SCAVENGER_UNLOCK_DT
+    admin = is_admin(request)
+    olympics_unlocked = admin or now >= OLYMPICS_UNLOCK_DT
+    scavenger_unlocked = admin or now >= SCAVENGER_UNLOCK_DT
 
     with db.get_conn() as conn:
         olympic_rows = conn.execute("SELECT * FROM olympic_scores").fetchall()
