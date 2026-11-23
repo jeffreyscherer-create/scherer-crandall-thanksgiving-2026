@@ -47,6 +47,7 @@
         <input type="text" name="points" placeholder="Points (negative for penalty)" required>
         <button type="submit">Add</button>
       </form>
+      <p class="locked-note" id="bonus-error"></p>
       <div id="bonus-list"></div>
     </div>
 
@@ -112,6 +113,7 @@ function renderShowdownAdmin(state) {
       <p><strong>${sd.title}</strong>
         <button class="small ${current === "team1" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team1">Team 1: The Idiots win</button>
         <button class="small ${current === "team2" ? "" : "secondary"}" data-showdown="${sd.id}" data-winner="team2">Team 2: The Wise win</button>
+        ${current ? `<button class="small secondary" data-showdown-clear="${sd.id}">Clear</button>` : ""}
       </p>
     `;
   }).join("");
@@ -119,7 +121,7 @@ function renderShowdownAdmin(state) {
 
 function renderBonusList(state) {
   if (!state.scavenger_bonuses.length) return "<p class=\"locked-note\">None yet.</p>";
-  return state.scavenger_bonuses.map((b) => `<p>${teamPillHtml(b.team)} ${b.label}: ${b.points > 0 ? "+" : ""}${b.points}</p>`).join("");
+  return state.scavenger_bonuses.map((b) => `<p>${teamPillHtml(b.team)} ${b.label}: ${b.points > 0 ? "+" : ""}${b.points} <button class="small secondary" data-bonus-delete="${b.id}">Remove</button></p>`).join("");
 }
 
 function renderSubmissions(state) {
@@ -175,6 +177,20 @@ async function loadAdmin() {
     });
   });
 
+  document.querySelectorAll("[data-showdown-clear]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await postForm("/api/admin/showdown/clear", { showdown_id: btn.dataset.showdownClear });
+      loadAdmin();
+    });
+  });
+
+  document.querySelectorAll("[data-bonus-delete]").forEach((btn) => {
+    btn.addEventListener("click", async () => {
+      await postForm("/api/admin/scavenger/bonus/delete", { bonus_id: btn.dataset.bonusDelete });
+      loadAdmin();
+    });
+  });
+
   document.querySelectorAll("[data-void]").forEach((btn) => {
     btn.addEventListener("click", async () => {
       await postForm("/api/admin/scavenger/void", { submission_id: btn.dataset.void });
@@ -192,11 +208,18 @@ async function loadAdmin() {
   document.getElementById("bonus-form").onsubmit = async (e) => {
     e.preventDefault();
     const fd = new FormData(e.target);
-    await postForm("/api/admin/scavenger/bonus", {
+    const errorEl = document.getElementById("bonus-error");
+    errorEl.textContent = "";
+    const res = await postForm("/api/admin/scavenger/bonus", {
       team: fd.get("team"),
       label: fd.get("label"),
       points: fd.get("points"),
     });
+    if (!res.ok) {
+      const body = await res.json().catch(() => null);
+      errorEl.textContent = (body && body.detail) || "Couldn't add that. Try again.";
+      return;
+    }
     e.target.reset();
     loadAdmin();
   };

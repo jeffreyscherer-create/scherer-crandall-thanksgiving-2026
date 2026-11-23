@@ -186,15 +186,28 @@ def set_olympics_score(request: Request, event_id: str = Form(...), team: str = 
 
 
 @app.post("/api/admin/scavenger/bonus")
-def add_bonus(request: Request, team: str = Form(...), label: str = Form(...), points: int = Form(...)):
+def add_bonus(request: Request, team: str = Form(...), label: str = Form(...), points: str = Form(...)):
     require_admin(request)
     if team not in ("team1", "team2"):
         raise HTTPException(400, "bad team")
+    try:
+        points_int = int(points.strip())
+    except ValueError:
+        raise HTTPException(400, f"'{points}' isn't a whole number. Put the reason in Label and just the number (like -10 or 5) in Points.")
     with db.get_conn() as conn:
         conn.execute(
             "INSERT INTO scavenger_bonuses (team, label, points) VALUES (?, ?, ?)",
-            (team, label, points),
+            (team, label, points_int),
         )
+        conn.commit()
+    return {"ok": True}
+
+
+@app.post("/api/admin/scavenger/bonus/delete")
+def delete_bonus(request: Request, bonus_id: int = Form(...)):
+    require_admin(request)
+    with db.get_conn() as conn:
+        conn.execute("DELETE FROM scavenger_bonuses WHERE id = ?", (bonus_id,))
         conn.commit()
     return {"ok": True}
 
@@ -228,6 +241,15 @@ def set_showdown_winner(request: Request, showdown_id: str = Form(...), winner_t
             "ON CONFLICT(showdown_id) DO UPDATE SET winner_team = excluded.winner_team",
             (showdown_id, winner_team),
         )
+        conn.commit()
+    return {"ok": True}
+
+
+@app.post("/api/admin/showdown/clear")
+def clear_showdown_winner(request: Request, showdown_id: str = Form(...)):
+    require_admin(request)
+    with db.get_conn() as conn:
+        conn.execute("DELETE FROM showdown_results WHERE showdown_id = ?", (showdown_id,))
         conn.commit()
     return {"ok": True}
 
